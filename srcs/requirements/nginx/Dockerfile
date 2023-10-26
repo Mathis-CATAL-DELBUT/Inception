@@ -1,6 +1,8 @@
 # Image docker de base 
 FROM debian:buster
 
+EXPOSE 80
+
 # installe NGINX et ses dependences
 RUN apt-get update -y 
 RUN apt-get install -y nginx
@@ -18,3 +20,12 @@ RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/ngin
 # -subj = info du contrat : C -> pays / ST -> region / L -> Localisation / O -> organisation / OU -> unite oranisationnelle / CM -> nom commun / UID -> identifiant unique 
 RUN mkdir -p /var/run/nginx
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+
+RUN chmod 755 /var/www/html
+# +rx
+RUN chown -R www-data:www-data /var/www/html
+# change la propriete de /var/www/html. Garanti l'acces et le service par nginx (Wordpress par exemple)
+
+CMD ["nginx", "-g", "daemon off;"]
+# -g spécifier une directive de configuration qui doit être exécutée au démarrage du serveur.
+# -g daemon off; sert a run le container temps que nginx run 
