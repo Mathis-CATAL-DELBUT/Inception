@@ -1,5 +1,5 @@
 # Image docker de base 
-FROM debian:buster
+FROM debian:bullseye
 
 # installe NGINX et ses dependences
 RUN apt-get update -y 
