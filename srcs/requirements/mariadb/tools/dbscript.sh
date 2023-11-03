@@ -1,24 +1,18 @@
 #!/bin/bash
+#set -eux
 
-# Démarrer le service MariaDB
-service mariadb start
+service mysql start;
 
-while ! mysqladmin ping --silent; do
-    sleep 1
-done
+# log into MariaDB as root and create database and the user
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
+mysql -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
+mysql -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
+mysql -e "FLUSH PRIVILEGES;"
 
-# Connexion à MariaDB et création de la base de données et de l'utilisateur
-mysql -u root -p${SQL_ROOT_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
-mysql -u root -p${SQL_ROOT_PASSWORD} -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
-mysql -u root -p${SQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
-mysql -u root -p${SQL_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
-
-# Arrêter MariaDB
 mysqladmin -u root -p${SQL_ROOT_PASSWORD} shutdown
-
-sleep 1
-echo "Start in safe mode"
+#mysqladmin -u root shutdown
 exec mysqld_safe
 
-# Afficher le statut
-# echo "MariaDB database and user were created successfully!"
+#print status
+echo "MariaDB database and user were created successfully! "

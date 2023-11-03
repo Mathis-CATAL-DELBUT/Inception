@@ -1,5 +1,5 @@
 # use debian as the base image
-FROM debian:bullseye
+FROM debian:buster
 
 # install MariaDB and other dependencies
 RUN apt-get update -y
@@ -23,6 +23,5 @@ EXPOSE 3306
 
 COPY ./tools/dbscript.sh ./
 RUN chmod +x ./dbscript.sh
-# RUN service mariadb start
 
 ENTRYPOINT ["bash", "./dbscript.sh"]
