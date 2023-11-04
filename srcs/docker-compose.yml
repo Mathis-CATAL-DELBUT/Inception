@@ -18,7 +18,7 @@ services:  # Configuration des services (conteneurs)
     restart: unless-stopped  # Redémarre le conteneur en cas d'échec
     env_file: .env  # Charge les variables d'environnement depuis le fichier .env
     healthcheck:  # Configuration de la vérification de santé
-      test: mysqladmin ping --host=localhost -p${SQL_ROOT_PASSWORD}  # Commande de vérification de la santé
+      test: mysqladmin ping --host=localhost -p${SQL_ROOT_PASSWORD}  # Commande de vérification la santé
       interval: 5s  # Intervalle entre les vérifications de santé
       timeout: 1s  # Délai d'attente pour la vérification
       retries: 20  # Nombre de tentatives de vérification
