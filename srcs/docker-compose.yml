@@ -1,82 +1,87 @@
-version: '3'
+version: '3'  # Version de Docker Compose utilisée
 
-services:
+services:  # Configuration des services (conteneurs)
+
+  # Service MariaDB
   mariadb:
-    image: mariadb
-    container_name: mariadb
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    volumes:
+    image: mariadb  # Utilise l'image de base MariaDB
+    container_name: mariadb  # Nom du conteneur
+    build:  # Configuration de la construction de l'image
+      context: ./requirements/mariadb  # Répertoire source pour la construction
+      dockerfile: Dockerfile  # Utilise un fichier Dockerfile personnalisé
+    volumes:  # Montage de volume pour stocker les données MariaDB
       - mariadb:/var/lib/mysql
-    expose:
+    expose:  # Expose le port 3306 pour les connexions internes
       - "3306"
-    networks:
+    networks:  # Associe le conteneur au réseau "inception"
       - inception
-    restart: unless-stopped
-    env_file: .env
-    healthcheck:
-      test: mysqladmin ping --host=localhost -p${SQL_ROOT_PASSWORD}
-      interval: 5s
-      timeout: 1s
-      retries: 20
-      start_period: 5s
+    restart: unless-stopped  # Redémarre le conteneur en cas d'échec
+    env_file: .env  # Charge les variables d'environnement depuis le fichier .env
+    healthcheck:  # Configuration de la vérification de santé
+      test: mysqladmin ping --host=localhost -p${SQL_ROOT_PASSWORD}  # Commande de vérification de la santé
+      interval: 5s  # Intervalle entre les vérifications de santé
+      timeout: 1s  # Délai d'attente pour la vérification
+      retries: 20  # Nombre de tentatives de vérification
+      start_period: 5s  # Délai initial avant la première vérification de santé
 
+  # Service WordPress
   wordpress:
-    image: wordpress
-    container_name: wordpress
-    build:
-      context: ./requirements/wordpress
-      dockerfile: Dockerfile
-    volumes:
+    image: wordpress  # Utilise l'image de base WordPress
+    container_name: wordpress  # Nom du conteneur
+    build:  # Configuration de la construction de l'image
+      context: ./requirements/wordpress  # Répertoire source pour la construction
+      dockerfile: Dockerfile  # Utilise un fichier Dockerfile personnalisé
+    volumes:  # Montage de volume pour stocker les fichiers WordPress
       - wordpress:/var/www/html/wordpress
-    expose:
+    expose:  # Expose le port 9000 pour les connexions internes
       - "9000"
-    networks:
+    networks:  # Associe le conteneur au réseau "inception"
       - inception
-    restart: unless-stopped
-    env_file: .env
-    depends_on:
+    restart: unless-stopped  # Redémarre le conteneur en cas d'échec
+    env_file: .env  # Charge les variables d'environnement depuis le fichier .env
+    depends_on:  # Dépendance du service MariaDB
       mariadb:
-        condition: service_healthy    
+        condition: service_healthy  # Attends que le service MariaDB soit sain
 
+  # Service Nginx
   nginx:
-    image: nginx
-    container_name: nginx
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
-    volumes:
+    image: nginx  # Utilise l'image de base Nginx
+    container_name: nginx  # Nom du conteneur
+    build:  # Configuration de la construction de l'image
+      context: ./requirements/nginx  # Répertoire source pour la construction
+      dockerfile: Dockerfile  # Utilise un fichier Dockerfile personnalisé
+    volumes:  # Montage de volume pour partager les fichiers WordPress avec Nginx
       - wordpress:/var/www/html/wordpress
-    depends_on:
+    depends_on:  # Dépendance du service WordPress
       - wordpress
-    ports:
+    ports:  # Mappe le port 443 de l'hôte vers le port 443 du conteneur
       - "443:443"
-    networks:
+    networks:  # Associe le conteneur au réseau "inception"
       - inception
-    restart: unless-stopped
-    env_file: .env
-    healthcheck:
-      test: 'curl -kfsSL https://localhost:443/status'
-      interval: 5s
-      timeout: 1s
-      retries: 10
-      start_period: 5s
+    restart: unless-stopped  # Redémarre le conteneur en cas d'échec
+    env_file: .env  # Charge les variables d'environnement depuis le fichier .env
+    healthcheck:  # Configuration de la vérification de santé
+      test: 'curl -kfsSL https://localhost:443/status'  # Commande de vérification de la santé
+      interval: 5s  # Intervalle entre les vérifications de santé
+      timeout: 1s  # Délai d'attente pour la vérification
+      retries: 10  # Nombre de tentatives de vérification
+      start_period: 5s  # Délai initial avant la première vérification de santé
 
-volumes:
-  mariadb:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/home/mcatal-d/data/mariadb'
-  wordpress:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/home/mcatal-d/data/wordpress'
+volumes:  # Configuration des volumes
+  mariadb:  # Volume pour stocker les données de MariaDB
+    driver: local  # Utilise le pilote de volume local
+    driver_opts:  # Options du pilote de volume
+      type: 'none'  # Type de montage (bind)
+      o: 'bind'  # Option de montage pour le pilote de volume local
+      device: '/home/mcatal-d/data/mariadb'  # Répertoire de montage
 
-networks:
-  inception:
-    name: inception
+  wordpress:  # Volume pour stocker les fichiers WordPress
+    driver: local  # Utilise le pilote de volume local
+    driver_opts:  # Options du pilote de volume
+      type: 'none'  # Type de montage (bind)
+      o: 'bind'  # Option de montage pour le pilote de volume local
+      device: '/home/mcatal-d/data/wordpress'  # Répertoire de montage
+
+networks:  # Configuration des réseaux
+  inception:  # Réseau nommé "inception"
+    name: inception  # Nom du réseau

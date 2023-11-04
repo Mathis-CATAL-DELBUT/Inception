@@ -1,8 +1,22 @@
-[mysqld]
+[mysqld]  # Section de configuration spécifique au serveur MySQL
+
+# Répertoire de données de MySQL
 datadir = /var/lib/mysql
+
+# Répertoire de base de l'installation MySQL
 basedir = /usr
+
+# Adresse IP à laquelle MySQL écoute les connexions (0.0.0.0 signifie toutes les interfaces)
 bind_address = 0.0.0.0
+
+# Port d'écoute de MySQL
 port = 3306
+
+# Utilisateur sous lequel le serveur MySQL s'exécute
 user = root
+
+# Emplacement du fichier de journal d'erreurs MySQL
 log_error = /var/log/mysql/error.log
+
+# Emplacement du socket de communication pour MySQL
 socket = /var/run/mysqld/mysqld.sock
