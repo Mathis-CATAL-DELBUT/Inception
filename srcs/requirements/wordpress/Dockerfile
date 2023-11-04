@@ -12,7 +12,7 @@ RUN chown -R www-data:www-data /var/www/*
 
 RUN chmod -R 755 /var/www/*
 
-COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
@@ -20,7 +20,7 @@ RUN chmod +x wp-cli.phar
 
 RUN mv wp-cli.phar /usr/local/bin/wp
 
-COPY ./conf/wpscript.sh ./
+COPY ./tools/wpscript.sh ./
 
 RUN chmod +x ./wpscript.sh
 
