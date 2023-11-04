@@ -1,11 +1,8 @@
-[server]
 [mysqld]
-user			        = mysql
-port			        = 3306
-basedir			        = /usr
-datadir			        = /var/lib/mysql
-pid-file                = /var/run/mysqld/mysqld.pid
-socket			        = /var/run/mysqld/mysqld.sock
-skip_networking 	    = off
-max_allowed_packet      = 64M
-log_error               = /var/log/mysql/error.log
+datadir = /var/lib/mysql
+basedir = /usr
+bind_address = 0.0.0.0
+port = 3306
+user = root
+log_error = /var/log/mysql/error.log
+socket = /var/run/mysqld/mysqld.sock

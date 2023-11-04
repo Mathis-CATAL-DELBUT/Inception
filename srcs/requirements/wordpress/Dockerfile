@@ -1,31 +1,29 @@
-FROM debian:buster
+FROM debian:bullseye
 
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get install -y wget
-RUN apt-get install -y php7.3 php-fpm php-mysql
+RUN apt update && apt upgrade -y
 
-# a command-line interface for WordPress, you can manage WordPress once it's downloaded
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod +x wp-cli.phar \
-	&& mv wp-cli.phar /usr/local/bin/wp
+RUN apt install wget php7.4 php-fpm php-mysql mariadb-client sudo -y
 
-RUN apt-get update && apt-get install -y default-mysql-client
-RUN apt-get install -y mariadb-client
-RUN wget https://wordpress.org/wordpress-6.1.1.tar.gz -P /var/www/html
-RUN cd /var/www/html \
-	&& tar -xzf /var/www/html/wordpress-6.1.1.tar.gz \
-	&& rm /var/www/html/wordpress-6.1.1.tar.gz
+RUN wget https://fr.wordpress.org/wordpress-6.2.2-fr_FR.tar.gz -P /var/www/html
 
-# ensure that the web server(nginx) has the necessary permissions to read and execute the files within the web root directory
+RUN cd /var/www/html && tar -xzf /var/www/html/wordpress-6.2.2-fr_FR.tar.gz && rm /var/www/html/wordpress-6.2.2-fr_FR.tar.gz
+
 RUN chown -R www-data:www-data /var/www/*
+
 RUN chmod -R 755 /var/www/*
 
-EXPOSE 9000
+COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-COPY ./tools/wpscript.sh ./
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+RUN chmod +x wp-cli.phar
+
+RUN mv wp-cli.phar /usr/local/bin/wp
+
+COPY ./conf/wpscript.sh ./
+
 RUN chmod +x ./wpscript.sh
 
-COPY ./tools/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+EXPOSE 9000
 
 ENTRYPOINT ["bash", "./wpscript.sh"]
