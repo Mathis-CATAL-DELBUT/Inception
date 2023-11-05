@@ -2,7 +2,8 @@ version: '3'  # Version de Docker Compose utilisée
 
 services:  # Configuration des services (conteneurs)
 
-  # Service MariaDB
+  # Service MariaDB : 
+  # Système de gestion de base de données relationnelle open-source.
   mariadb:
     image: mariadb  # Utilise l'image de base MariaDB
     container_name: mariadb  # Nom du conteneur
@@ -25,6 +26,7 @@ services:  # Configuration des services (conteneurs)
       start_period: 5s  # Délai initial avant la première vérification de santé
 
   # Service WordPress
+  # Plateforme de gestion de contenu open-source pour la création de sites web.
   wordpress:
     image: wordpress  # Utilise l'image de base WordPress
     container_name: wordpress  # Nom du conteneur
@@ -44,6 +46,7 @@ services:  # Configuration des services (conteneurs)
         condition: service_healthy  # Attends que le service MariaDB soit sain
 
   # Service Nginx
+  # Serveur web open-source conçu pour la gestion de sites web.
   nginx:
     image: nginx  # Utilise l'image de base Nginx
     container_name: nginx  # Nom du conteneur
