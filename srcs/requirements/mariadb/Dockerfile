@@ -2,7 +2,8 @@
 FROM debian:bullseye
 
 # Met à jour le système et effectue une mise à niveau des paquets
-RUN apt update && apt upgrade -y
+RUN apt update -y
+RUN apt upgrade -y
 
 # Installe le serveur MariaDB
 RUN apt install mariadb-server -y

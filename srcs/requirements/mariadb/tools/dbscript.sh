@@ -26,6 +26,3 @@ mysqladmin -u root --password=${SQL_ROOT_PASSWORD} shutdown
 
 # Démarre MariaDB en mode sécurisé (safe mode).
 mysqld_safe
-
-# Affiche un message pour indiquer que MariaDB a été créé avec succès.
-echo "MariaDB a été créé avec succès!!"
