@@ -10,7 +10,7 @@ RUN mkdir -p /etc/nginx/ssl
 RUN apt-get install -y openssl
 
 # create a directory to store certificates and keys and generate the keys
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=mcatal-d.42.fr/UID=mcatal-d"
+RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=mathiflix.me/UID=mcatal-d"
 # openssl = chiffrement et sécurité des communications.
 # req -x509 = creer un certificat x509 auto signe (il n'a donc pas vraiment de valeur)
 # nodes = pas de chiffrement 
